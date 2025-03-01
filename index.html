@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบคำถามที่พบบ่อย - ระบบบริหารงานบุคคล</title>
+    <!-- เพิ่ม Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- ไอคอน -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-logo">
+            <i class="fas fa-users"></i>
+        </div>
+        <div class="header-title">ระบบคำถามที่พบบ่อย - ระบบบริหารงานบุคคล</div>
+    </div>
+    
+    <!-- ช่องค้นหา -->
+    <div class="search-container">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="ค้นหาคำถาม..." />
+            <button id="searchButton"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="sort-options">
+            <label for="sortSelect">จัดเรียงตาม: </label>
+            <select id="sortSelect">
+                <option value="newest">ล่าสุด</option>
+                <option value="oldest">เก่าสุด</option>
+                <option value="alphabetical">ตัวอักษร (ก-ฮ)</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="sidebar">
+            <h2><i class="fas fa-th-list"></i> หมวดหมู่คำถาม</h2>
+            <ul id="categoryList" class="category-list">
+                <li class="category-item active" data-group="all">
+                    <i class="fas fa-home"></i> ทั้งหมด
+                </li>
+                <!-- ข้อมูลหมวดหมู่เพิ่มเติมจะถูกเพิ่มที่นี่ -->
+            </ul>
+        </div>
+        
+        <div class="content">
+            <div id="loadingIndicator" class="loading">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">กำลังโหลดข้อมูล...</div>
+            </div>
+            
+            <div id="errorIndicator" class="error" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText">เกิดข้อผิดพลาดในการโหลดข้อมูล</span>
+            </div>
+            
+            <div id="contentArea" style="display: none;">
+                <div id="introContent" class="intro-card">
+                    <h2><i class="fas fa-info-circle"></i> คำถามที่พบบ่อยของระบบบริหารงานบุคคล</h2>
+                    <p>ยินดีต้อนรับสู่ระบบคำถามที่พบบ่อยของระบบบริหารงานบุคคล เว็บไซต์นี้ได้รวบรวมคำถามและคำตอบที่พบบ่อยเกี่ยวกับการใช้งานระบบ</p>
+                    <p>ในหน้านี้ คุณจะพบคำตอบสำหรับคำถามพื้นฐานและวิธีการใช้งานฟังก์ชันต่างๆ ของระบบบริหารงานบุคคล หากมีข้อสงสัยเพิ่มเติม โปรดติดต่อฝ่ายทรัพยากรบุคคล</p>
+                    
+                    <div class="intro-info">
+                        <h3><i class="fas fa-lightbulb"></i> การใช้งานเว็บไซต์</h3>
+                        <ul>
+                            <li>คลิกที่หมวดหมู่ในเมนูด้านซ้ายเพื่อดูคำถามในหมวดนั้น</li>
+                            <li>คลิกที่คำถามเพื่อดูคำตอบโดยละเอียด</li>
+                            <li>ใช้ช่องค้นหาเพื่อค้นหาคำถามที่ต้องการได้อย่างรวดเร็ว</li>
+                            <li>คุณสามารถจัดเรียงคำถามตามความต้องการได้</li>
+                            <li>คุณสามารถกลับไปดูคำถามทั้งหมดได้โดยคลิกที่ "ทั้งหมด" ในเมนูด้านซ้าย</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div id="questionsContent" style="display: none;">
+                    <h2 id="questionsTitle"><i class="fas fa-question-circle"></i> คำถามทั้งหมด</h2>
+                    <div id="questionsContainer" class="questions-container">
+                        <!-- คำถามจะถูกเพิ่มที่นี่ -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 ระบบบริหารงานบุคคล. สงวนลิขสิทธิ์.</p>
+            <p>Version 1.0.0 | Last Updated: <span id="lastUpdated">1 Mar 2025</span></p>
+        </div>
+        <div class="feedback">
+            <p>หากมีคำถามหรือข้อเสนอแนะ กรุณาติดต่อ: <a href="mailto:hr@example.com">hr@example.com</a></p>
+        </div>
+    </div>
+    
+    <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/config.js"></script>
+    <script src="js/demo-data.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
