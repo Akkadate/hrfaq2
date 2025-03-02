@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,13 +8,15 @@
     <!-- เพิ่ม Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- ไอคอน -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- CSS -->
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="admin-styles.css">
 </head>
+
 <body>
     <div class="header">
         <div class="header-logo">
@@ -26,7 +29,7 @@
             </button>
         </div>
     </div>
-    
+
     <!-- หน้าเข้าสู่ระบบ -->
     <div id="loginSection" class="login-section">
         <div class="login-container">
@@ -63,7 +66,7 @@
             </form>
         </div>
     </div>
-    
+
     <!-- หน้าจัดการข้อมูล -->
     <div id="adminSection" class="admin-section" style="display: none;">
         <div class="admin-container">
@@ -93,7 +96,7 @@
                     </li>
                 </ul>
             </div>
-            
+
             <!-- พื้นที่แสดงเนื้อหา -->
             <div class="admin-content">
                 <!-- แดชบอร์ด -->
@@ -106,7 +109,7 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <div class="dashboard-stats">
                         <div class="stat-card">
                             <div class="stat-icon">
@@ -145,7 +148,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="dashboard-panels">
                         <div class="dashboard-panel">
                             <h3><i class="fas fa-chart-pie"></i> สถิติตามหมวดหมู่</h3>
@@ -164,7 +167,7 @@
                                 </table>
                             </div>
                         </div>
-                        
+
                         <div class="dashboard-panel">
                             <h3><i class="fas fa-history"></i> กิจกรรมล่าสุด</h3>
                             <div class="panel-content">
@@ -175,7 +178,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- จัดการคำถาม -->
                 <div id="questionsView" class="admin-view" style="display: none;">
                     <div class="admin-header">
@@ -192,7 +195,7 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <div class="filter-toolbar">
                         <div class="filter-group">
                             <label for="categoryFilter">หมวดหมู่:</label>
@@ -210,7 +213,7 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="data-container">
                         <table class="data-table" id="questionsTable">
                             <thead>
@@ -227,13 +230,13 @@
                                 <!-- ข้อมูลคำถามจะถูกเพิ่มที่นี่ -->
                             </tbody>
                         </table>
-                        
+
                         <div id="questionsPagination" class="pagination">
                             <!-- การแบ่งหน้าจะถูกเพิ่มที่นี่ -->
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- จัดการหมวดหมู่ -->
                 <div id="categoriesView" class="admin-view" style="display: none;">
                     <div class="admin-header">
@@ -244,7 +247,7 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <div class="data-container">
                         <table class="data-table" id="categoriesTable">
                             <thead>
@@ -262,13 +265,13 @@
                         </table>
                     </div>
                 </div>
-                
+
                 <!-- ตั้งค่าระบบ -->
                 <div id="settingsView" class="admin-view" style="display: none;">
                     <div class="admin-header">
                         <h2><i class="fas fa-cog"></i> ตั้งค่าระบบ</h2>
                     </div>
-                    
+
                     <div class="settings-container">
                         <form id="settingsForm" class="settings-form">
                             <div class="settings-section">
@@ -289,7 +292,7 @@
                                     <input type="text" id="supabaseTable" name="supabaseTable">
                                 </div>
                             </div>
-                            
+
                             <div class="settings-section">
                                 <h3><i class="fas fa-hdd"></i> การตั้งค่าแคช</h3>
                                 <div class="form-group checkbox-group">
@@ -301,7 +304,7 @@
                                     <input type="number" id="cacheDuration" name="cacheDuration" min="0">
                                 </div>
                             </div>
-                            
+
                             <div class="settings-section">
                                 <h3><i class="fas fa-globe"></i> การตั้งค่าทั่วไป</h3>
                                 <div class="form-group">
@@ -313,7 +316,7 @@
                                     <input type="date" id="lastUpdatedDate" name="lastUpdatedDate">
                                 </div>
                             </div>
-                            
+
                             <div class="form-actions">
                                 <button type="button" id="resetSettings" class="btn btn-secondary">
                                     <i class="fas fa-undo"></i> รีเซ็ต
@@ -328,7 +331,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Modal สำหรับเพิ่ม/แก้ไขคำถาม -->
     <div id="questionModal" class="modal" style="display: none;">
         <div class="modal-content question-modal">
@@ -339,23 +342,23 @@
             <div class="modal-body">
                 <form id="questionForm">
                     <input type="hidden" id="questionId" name="id" value="">
-                    
+
                     <div class="form-group">
                         <label for="questionText">คำถาม:</label>
                         <input type="text" id="questionText" name="question" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="questionCategory">หมวดหมู่:</label>
                         <select id="questionCategory" name="group" required>
                             <!-- ตัวเลือกหมวดหมู่จะถูกเพิ่มที่นี่ -->
                         </select>
                         <div class="select-hint">
-                            <i class="fas fa-info-circle"></i> 
+                            <i class="fas fa-info-circle"></i>
                             สามารถเพิ่มหมวดหมู่ใหม่ได้ที่เมนู "จัดการหมวดหมู่"
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="questionAnswer">คำตอบ:</label>
                         <div class="rich-text-toolbar">
@@ -389,7 +392,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Modal สำหรับเพิ่ม/แก้ไขหมวดหมู่ -->
     <div id="categoryModal" class="modal" style="display: none;">
         <div class="modal-content category-modal">
@@ -400,12 +403,12 @@
             <div class="modal-body">
                 <form id="categoryForm">
                     <input type="hidden" id="categoryId" name="id" value="">
-                    
+
                     <div class="form-group">
                         <label for="categoryName">ชื่อหมวดหมู่:</label>
                         <input type="text" id="categoryName" name="name" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>ไอคอน:</label>
                         <div class="icon-selector" id="iconSelector">
@@ -430,7 +433,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Modal สำหรับยืนยันการลบ -->
     <div id="confirmDeleteModal" class="modal" style="display: none;">
         <div class="modal-content confirm-modal">
@@ -454,7 +457,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- JavaScript -->
     <script src="js/config.js"></script>
     <script src="js/utils.js"></script>
@@ -462,5 +465,7 @@
     <script src="js/admin-ui.js"></script>
     <script src="js/admin-data.js"></script>
     <script src="js/admin.js"></script>
+    <script src="js/admin-ui-fix.js"></script>
 </body>
+
 </html>
