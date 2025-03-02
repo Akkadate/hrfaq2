@@ -564,3 +564,28 @@ body.dark-mode .question-card.active .question-header {
         max-width: none;
     }
 }
+/* เพิ่มใน styles.css */
+.refresh-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.refresh-button:hover {
+    background-color: var(--primary-dark);
+}
+
+.refresh-button i {
+    transition: transform 0.3s;
+}
+
+.refresh-button:hover i {
+    transform: rotate(180deg);
+}

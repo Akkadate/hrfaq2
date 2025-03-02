@@ -187,3 +187,68 @@ function sortQuestions(questions, sortBy = 'newest') {
             return sortedQuestions.sort((a, b) => b.id - a.id);
     }
 }
+
+/**
+ * ฟังก์ชันแปลงวันที่เป็นเวลาที่ผ่านมา (เช่น "5 นาทีที่แล้ว", "2 วันที่แล้ว")
+ * @param {string} dateStr - สตริงวันที่ (เช่น "2025-01-15T09:30:00")
+ * @returns {string} - ข้อความแสดงเวลาที่ผ่านมา
+ */
+function formatTimeAgo(dateStr) {
+    try {
+        const date = new Date(dateStr);
+        const now = new Date();
+        const diffSeconds = Math.floor((now - date) / 1000);
+        
+        // เวลาที่ผ่านมาน้อยกว่า 1 นาที
+        if (diffSeconds < 60) {
+            return 'เมื่อสักครู่';
+        }
+        
+        // เวลาที่ผ่านมาน้อยกว่า 1 ชั่วโมง
+        if (diffSeconds < 3600) {
+            const minutes = Math.floor(diffSeconds / 60);
+            return `${minutes} นาทีที่แล้ว`;
+        }
+        
+        // เวลาที่ผ่านมาน้อยกว่า 1 วัน
+        if (diffSeconds < 86400) {
+            const hours = Math.floor(diffSeconds / 3600);
+            return `${hours} ชั่วโมงที่แล้ว`;
+        }
+        
+        // เวลาที่ผ่านมาน้อยกว่า 30 วัน
+        if (diffSeconds < 2592000) {
+            const days = Math.floor(diffSeconds / 86400);
+            return `${days} วันที่แล้ว`;
+        }
+        
+        // เวลาที่ผ่านมามากกว่า 30 วัน
+        return formatThaiDate(dateStr);
+    } catch (error) {
+        logError('Error calculating time ago:', error);
+        return dateStr; // คืนค่าเดิมถ้าเกิดข้อผิดพลาด
+    }
+}
+
+/**
+ * ฟังก์ชันแปลงวันที่เป็นรูปแบบไทย
+ * @param {string} dateStr - สตริงวันที่ (เช่น "2025-01-15T09:30:00")
+ * @returns {string} - วันที่ในรูปแบบไทย (เช่น "15 ม.ค. 2568")
+ */
+function formatThaiDate(dateStr) {
+    try {
+        const date = new Date(dateStr);
+        const thaiMonths = [
+            'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.',
+            'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'
+        ];
+        
+        // แปลงปีคริสต์ศักราชเป็นพุทธศักราช
+        const thaiYear = date.getFullYear() + 543;
+        
+        return `${date.getDate()} ${thaiMonths[date.getMonth()]} ${thaiYear}`;
+    } catch (error) {
+        logError('Error formatting date:', error);
+        return dateStr; // คืนค่าเดิมถ้าเกิดข้อผิดพลาด
+    }
+}

@@ -87,6 +87,25 @@
         </div>
     </div>
     
+<!-- แก้ไขใน index.html -->
+<div class="search-container">
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="ค้นหาคำถาม..." />
+        <button id="searchButton"><i class="fas fa-search"></i></button>
+    </div>
+    <div class="sort-options">
+        <label for="sortSelect">จัดเรียงตาม: </label>
+        <select id="sortSelect">
+            <option value="newest">ล่าสุด</option>
+            <option value="oldest">เก่าสุด</option>
+            <option value="alphabetical">ตัวอักษร (ก-ฮ)</option>
+        </select>
+    </div>
+    <button id="refreshButton" class="refresh-button">
+        <i class="fas fa-sync-alt"></i> รีเฟรช
+    </button>
+</div>
+
     <div class="footer">
         <div class="footer-content">
             <p>&copy; 2025 ระบบบริหารงานบุคคล. สงวนลิขสิทธิ์.</p>

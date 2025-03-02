@@ -337,6 +337,14 @@ function setupEventListeners() {
     if (DOM.sortSelect) {
         DOM.sortSelect.addEventListener('change', handleSortChange);
     }
+    // เพิ่ม Event Listener สำหรับปุ่มรีเฟรช
+    const refreshButton = document.getElementById('refreshButton');
+    if (refreshButton) {
+        refreshButton.addEventListener('click', function() {
+            // โหลดข้อมูลใหม่
+            initApp();
+        });
+    }
 }
 
 /**
@@ -384,4 +392,63 @@ function initializeUI(questions, groups) {
     
     // แสดงเนื้อหา
     finishLoading();
+}
+/**
+ * เริ่มต้นแอปพลิเคชัน
+ */
+async function initApp() {
+    try {
+        // แสดง loading indicator
+        showLoading();
+        
+        try {
+            // พยายามดึงข้อมูลจาก Supabase
+            await findWorkingTable();
+            const data = await fetchFAQData();
+            
+            // ดึงกลุ่มที่ไม่ซ้ำกัน
+            const groups = extractUniqueGroups(data);
+            
+            // เตรียมข้อมูลสำหรับ UI
+            UI_STATE.questions = data;
+            UI_STATE.filteredQuestions = [...data];
+            UI_STATE.groups = groups;
+            
+            // เตรียม UI
+            setupEventListeners();
+            checkSavedTheme();
+            
+            // อัปเดตรายการหมวดหมู่
+            populateCategoryList();
+            
+            // อัปเดตข้อมูลส่วนท้าย
+            updateFooterInfo();
+            
+            // ซ่อนตัวแสดงการโหลดและแสดงเนื้อหา
+            hideLoading();
+            
+            // แสดงคำแนะนำเริ่มต้น
+            showIntroduction();
+        } catch (error) {
+            // ซ่อนตัวแสดงการโหลด
+            hideLoading();
+            
+            // แสดงข้อความแจ้งเตือน
+            showError('ไม่สามารถติดต่อฐานข้อมูลได้');
+        }
+    } catch (err) {
+        hideLoading();
+        showError('เกิดข้อผิดพลาดในการโหลดข้อมูล: ' + err.message);
+    }
+}
+
+/**
+ * แสดงข้อความแจ้งเตือนข้อผิดพลาด
+ * @param {string} message - ข้อความแจ้งเตือน
+ */
+function showError(message) {
+    DOM.loadingIndicator.style.display = 'none';
+    DOM.errorText.textContent = message;
+    DOM.errorIndicator.style.display = 'block';
+    DOM.contentArea.style.display = 'none';
 }

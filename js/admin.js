@@ -26,6 +26,9 @@ function initAdminPage() {
     setupUIEventListeners();
 }
 
+
+
+
 /**
  * โหลดข้อมูล FAQ จาก API หรือ demo ข้อมูล
  */
@@ -91,19 +94,18 @@ async function initAdminApp() {
     
     try {
         // โหลดข้อมูล FAQ
-        const useRealData = await loadFAQData();
-        
-        // ซ่อนข้อความกำลังโหลด
-        hideLoadingOverlay();
-        
-        // แสดงหน้าเริ่มต้น (แดชบอร์ด)
-        switchAdminView('dashboard');
-        
-        // แสดงข้อความแจ้งเตือนถ้าใช้ข้อมูลตัวอย่าง
-        if (!useRealData) {
-            setTimeout(() => {
-                showWarning('ไม่สามารถเชื่อมต่อกับฐานข้อมูลได้ จึงใช้ข้อมูลตัวอย่างแทน');
-            }, 500);
+        try {
+            await loadFAQData();
+            
+            // ซ่อนข้อความกำลังโหลด
+            hideLoadingOverlay();
+            
+            // แสดงหน้าเริ่มต้น (แดชบอร์ด)
+            switchAdminView('dashboard');
+        } catch (error) {
+            logError('ไม่สามารถเชื่อมต่อกับฐานข้อมูลได้:', error);
+            hideLoadingOverlay();
+            showError('ไม่สามารถเชื่อมต่อกับฐานข้อมูลได้');
         }
     } catch (error) {
         logError('เกิดข้อผิดพลาดในการเริ่มต้นแอปพลิเคชัน:', error);

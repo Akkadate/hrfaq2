@@ -1,4 +1,3 @@
-
 /**
  * ไฟล์จัดการ API สำหรับระบบ FAQ
  * จัดการการเชื่อมต่อกับ Supabase API
@@ -57,41 +56,19 @@ async function fetchFromSupabase(endpoint, options = {}) {
 }
 
 /**
- * ฟังก์ชันดึงข้อมูล FAQ จาก Supabase หรือ Cache
+ * ฟังก์ชันดึงข้อมูล FAQ จาก Supabase
  * @returns {Promise} - Promise ที่ส่งคืนข้อมูล FAQ
  */
 async function fetchFAQData() {
-    // ตรวจสอบว่ามีการเปิดใช้งาน Cache หรือไม่
-    if (CONFIG.cache.enabled) {
-        // ตรวจสอบว่ามีข้อมูลใน Local Storage หรือไม่
-        const cachedData = localStorage.getItem(CONFIG.cache.storageKeys.faqData);
-        const cacheTime = localStorage.getItem(CONFIG.cache.storageKeys.faqDataTime);
-        
-        // ถ้ามีข้อมูลและข้อมูลไม่เก่าเกิน cache duration
-        if (cachedData && cacheTime && (Date.now() - cacheTime < CONFIG.cache.duration)) {
-            logInfo('Using cached data');
-            return JSON.parse(cachedData);
-        }
-    }
-    
     try {
-        // ถ้าไม่มีข้อมูลหรือข้อมูลเก่า ให้เรียก API
-        const data = await fetchFromSupabase(CONFIG.supabase.table, {
+        // ดึงข้อมูลจาก Supabase โดยตรง
+        return await fetchFromSupabase(CONFIG.supabase.table, {
             method: 'GET',
             headers: {
                 'Range': '0-999',
                 'Prefer': 'count=exact',
             }
         });
-        
-        // บันทึกข้อมูลลงใน Local Storage ถ้าเปิดใช้งาน Cache
-        if (CONFIG.cache.enabled && data) {
-            localStorage.setItem(CONFIG.cache.storageKeys.faqData, JSON.stringify(data));
-            localStorage.setItem(CONFIG.cache.storageKeys.faqDataTime, Date.now().toString());
-            logInfo('Data cached to local storage');
-        }
-        
-        return data;
     } catch (error) {
         logError('Error fetching FAQ data:', error);
         throw error;
@@ -147,6 +124,131 @@ async function findWorkingTable() {
         }
     } catch (error) {
         logError('Error finding tables:', error);
+        throw error;
+    }
+}
+
+/**
+ * สร้างคำถามใหม่ใน Supabase
+ * @param {Object} question - ข้อมูลคำถาม
+ * @returns {Promise<Object>} - ข้อมูลคำถามที่สร้าง
+ */
+async function createQuestionInSupabase(question) {
+    return await fetchFromSupabase(CONFIG.supabase.table, {
+        method: 'POST',
+        body: question
+    });
+}
+
+/**
+ * อัปเดตคำถามใน Supabase
+ * @param {number} id - ID ของคำถาม
+ * @param {Object} question - ข้อมูลคำถามที่จะอัปเดต
+ * @returns {Promise<boolean>} - true หากสำเร็จ
+ */
+async function updateQuestionInSupabase(id, question) {
+    return await fetchFromSupabase(CONFIG.supabase.table, {
+        method: 'PATCH',
+        body: question,
+        params: { id: `eq.${id}` }
+    });
+}
+
+/**
+ * ลบคำถามจาก Supabase
+ * @param {number} id - ID ของคำถาม
+ * @returns {Promise<boolean>} - true หากสำเร็จ
+ */
+async function deleteQuestionFromSupabase(id) {
+    return await fetchFromSupabase(CONFIG.supabase.table, {
+        method: 'DELETE',
+        params: { id: `eq.${id}` }
+    });
+}
+
+/**
+ * ยืนยันการลบรายการ
+ */
+async function confirmDelete() {
+    try {
+        const type = ADMIN_UI_STATE.modals.confirmDeleteModal.type;
+        const itemId = ADMIN_UI_STATE.modals.confirmDeleteModal.itemId;
+        
+        // แสดง loading
+        showLoadingOverlay();
+        
+        if (type === 'question') {
+            // ลบคำถาม
+            const id = parseInt(itemId, 10);
+            const index = UI_STATE.questions.findIndex(q => q.id === id);
+            
+            if (index !== -1) {
+                const question = UI_STATE.questions[index];
+                
+                try {
+                    // ลบใน Supabase
+                    await deleteQuestionFromSupabase(id);
+                    
+                    // ลบใน UI_STATE
+                    UI_STATE.questions.splice(index, 1);
+                    
+                    // บันทึกกิจกรรม
+                    logActivity('delete', 'คำถาม', `ลบคำถาม ID ${id}: ${question.question.substring(0, 30)}...`);
+                    
+                    showSuccess('ลบคำถามเรียบร้อยแล้ว');
+                } catch (error) {
+                    logError('ไม่สามารถลบข้อมูลใน Supabase ได้:', error);
+                    showError('ไม่สามารถลบข้อมูลในฐานข้อมูลได้');
+                    throw error;
+                }
+            }
+            
+            // โหลดข้อมูลคำถามใหม่
+            if (ADMIN_UI_STATE.currentView === 'questions') {
+                loadQuestionsData();
+            }
+        } else if (type === 'category') {
+            // ... โค้ดส่วนของการลบหมวดหมู่ ...
+        }
+        
+        // ซ่อน loading
+        hideLoadingOverlay();
+        
+        // ปิด Modal
+        toggleModal('confirmDeleteModal', false);
+    } catch (error) {
+        hideLoadingOverlay();
+        logError('เกิดข้อผิดพลาดในการลบรายการ:', error);
+        showError('ไม่สามารถลบรายการได้');
+    }
+}
+
+/**
+ * ลบคำถามจาก Supabase
+ * @param {number} id - ID ของคำถาม
+ * @returns {Promise<boolean>} - true หากสำเร็จ
+ */
+async function deleteQuestionFromSupabase(id) {
+    try {
+        const url = `${CONFIG.supabase.url}/rest/v1/${CONFIG.supabase.table}?id=eq.${id}`;
+        const headers = {
+            'apikey': CONFIG.supabase.key,
+            'Authorization': `Bearer ${CONFIG.supabase.key}`,
+            'Content-Type': 'application/json'
+        };
+
+        const response = await fetchWithTimeout(url, {
+            method: 'DELETE',
+            headers
+        }, CONFIG.apiTimeout);
+
+        if (!response.ok) {
+            throw new Error(`Supabase API error: ${response.status} ${response.statusText}`);
+        }
+
+        return true;
+    } catch (error) {
+        logError('Error deleting question from Supabase:', error);
         throw error;
     }
 }

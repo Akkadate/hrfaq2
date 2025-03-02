@@ -1,7 +1,5 @@
-
 /**
  * ไฟล์การตั้งค่าสำหรับระบบ FAQ
- * ไฟล์นี้จะรวมการตั้งค่าต่างๆ ของระบบไว้ในที่เดียว
  */
 
 // การตั้งค่า Supabase
@@ -15,16 +13,6 @@ const CONFIG = {
     
     // API Timeout in milliseconds
     apiTimeout: 5000,
-    
-    // Cache settings
-    cache: {
-        enabled: true,
-        duration: 86400000, // 24 hours in milliseconds
-        storageKeys: {
-            faqData: 'faqData',
-            faqDataTime: 'faqDataTime'
-        }
-    },
     
     // เพิ่มรายละเอียดไอคอนสำหรับแต่ละหมวดหมู่
     groupIcons: {
